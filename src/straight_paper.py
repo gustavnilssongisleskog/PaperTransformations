@@ -1,6 +1,7 @@
 import numpy as np
 import cv2 as cv
 from numpy import ndarray
+import open3d
 
 from matrices import calibrate
 
@@ -36,4 +37,11 @@ def paper_straight_on(img: ndarray, paper_corners_2d: ndarray, paper_img_width: 
     colors = colors.reshape((paper_img_height, paper_img_width, 3))
     return colors
 
+def paper_pointcloud(img: ndarray, paper_corners_2d: ndarray, paper_img_width: int):
+    paper_points_3d, colors = paper_3d_and_color(img, paper_corners_2d, paper_img_width)
+
+    pointcloud = open3d.geometry.PointCloud()
+    pointcloud.points = open3d.utility.Vector3dVector(paper_points_3d)
+    pointcloud.colors = open3d.utility.Vector3dVector(colors / 255)
+    open3d.visualization.draw_geometries([pointcloud])
 
