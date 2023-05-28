@@ -10,9 +10,8 @@ def good_corners(img: ndarray) -> ndarray:
 
     corners = cv.goodFeaturesToTrack(gray, 20, 0.1, diag / 1000)
     corners = corners.reshape(-1, 2)
-    print(corners)
     corners = np.array(corners, dtype=np.int64)
-    print(corners)
+    
     return corners
 
 
