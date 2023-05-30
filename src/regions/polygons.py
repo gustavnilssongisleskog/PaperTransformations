@@ -34,7 +34,15 @@ def convex_hull(points: list) -> list:
     return top + bot
 
 def shoelace(hull: list) -> float:
-    return 0
+    area = 0
+
+    for i in range(len(hull) - 1):
+        area += hull[i][0] * hull[i + 1][1] - hull[i + 1][0] * hull[i][1]
+    area += hull[-1][0] * hull[0][1] - hull[0][0] * hull[-1][1]
+
+    area /= 2
+
+    return abs(area)
 
 def maximal_quadrilateral(hull: list) -> Tuple[float, list]:
     return 0, []
