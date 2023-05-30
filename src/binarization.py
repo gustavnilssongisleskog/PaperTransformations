@@ -2,6 +2,8 @@ import numpy as np
 import cv2 as cv
 from numpy import ndarray
 
+from rgb_variance import rgb_std, relative_rgb_std
+
 def grayscale(img: ndarray) -> ndarray:
     if len(img.shape) == 2:
         return img
@@ -37,38 +39,41 @@ def median_blur(img: ndarray, ksize: int = 5) -> ndarray:
 
 
 
+def binarize_white_only(img: ndarray, variance_tolerance: float=10, thresh_func=otsu_gauss) -> ndarray:
+    std = rgb_std(img)
+    white_pixels = std < variance_tolerance
+
+    thresh_light = thresh_func(img)
+
+    return thresh_light * white_pixels
+
 
 def main():
     from matplotlib import pyplot as plt
     paths = [f"C:/Users/ggisl/Desktop/PaperTransformations/images/IMG_0{i}.jpg" for i in range(4)]
     photo_ind = 3
-    img = cv.imread(paths[photo_ind])
-    img = img[:, :, ::-1]
-    gray = grayscale(img)
+    for photo_ind in range(4):
+        img = cv.imread(paths[photo_ind])
+        img = img[:, :, ::-1]
+        gray = grayscale(img)
 
-    img = cv.imread("C:/Users/ggisl/Desktop/Parking/images/personbil.jpg")
-    img = img[:, :, ::-1]
+        plt.subplot(2,2,1)
+        plt.imshow(img)
 
-    plt.imshow(img)
-    plt.show()
+        otsu = otsu_gauss(gray)
 
-    plt.subplot(2,2,1)
-    plt.imshow(gray)
+        plt.subplot(2,2,2)
+        plt.imshow(otsu)
 
-    otsu = otsu_gauss(gray)
+        std = rgb_std(img)
+        plt.subplot(2,2,3)
+        plt.imshow(std)
 
-    plt.subplot(2,2,2)
-    plt.imshow(otsu)
+        white = binarize_white_only(img)
+        plt.subplot(2,2,4)
+        plt.imshow(white)
 
-    median = median_blur(gray)
-    plt.subplot(2,2,3)
-    plt.imshow(median)
-
-    otsu_median = median_blur(otsu, 35)
-    plt.subplot(2,2,4)
-    plt.imshow(otsu_median)
-
-    plt.show()
+        plt.show()
 
 if __name__ == "__main__":
     main()
