@@ -3,7 +3,7 @@ import cv2 as cv
 from numpy import ndarray
 import open3d
 
-from matrices import calibrate
+from src.space.matrices import calibrate
 
 paper_width = 21
 paper_height = 29.7

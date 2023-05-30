@@ -2,9 +2,9 @@ import cv2 as cv
 import numpy as np
 from numpy import ndarray
 from typing import Tuple
-from matrices import *
+from src.space.matrices import *
 from matplotlib import pyplot as plt
-from straight_paper import paper_straight_on, paper_pointcloud
+from src.space.straight_paper import paper_straight_on, paper_pointcloud
 
 num_photos = 4
 

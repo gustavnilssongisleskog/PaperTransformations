@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from numpy import ndarray
 from math import sqrt
-from binarization import otsu_gauss, grayscale, adaptive_mean, adaptive_gauss
+from src.image_processing.binarization import otsu_gauss, grayscale, adaptive_mean, adaptive_gauss
 
 def good_corners(img: ndarray) -> ndarray:
     gray = grayscale(img)

@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from numpy import ndarray
 
-from rgb_variance import rgb_std, relative_rgb_std
+from src.image_processing.rgb_variance import rgb_std, relative_rgb_std
 
 def grayscale(img: ndarray) -> ndarray:
     if len(img.shape) == 2:
