@@ -99,10 +99,13 @@ def maximal_quadrilateral(hull: list) -> Tuple[float, list]:
 
     return best_area, best_hull
 
-def approximates_quadrilateral(points: list, tolerance: float) -> Tuple[bool, list]:
+def approximates_quadrilateral(points: list, tolerance: float) -> Tuple[bool, float, list]:
     hull = convex_hull(points)
+
+    if len(hull) < 4:
+        return False, 0, []
     hull_area = shoelace(hull)
 
     quad_area, quad = maximal_quadrilateral(hull)
-
-    return abs(hull_area - quad_area) / hull_area < tolerance, quad
+    
+    return abs(hull_area - quad_area) / hull_area < tolerance, quad_area, quad
