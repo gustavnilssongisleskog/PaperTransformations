@@ -73,6 +73,7 @@ def maximal_quadrilateral(hull: list) -> Tuple[float, list]:
             for k in range(lo, hi + 1):
                 triangle1 = max(triangle1, (shoelace([hull[i], hull[k], hull[j]]), hull[k]))
 
+            # ternary search between j and "i + n" for best triangle
             lo = j
             hi = i + n
             triangle2 = (0, (0, 0))
@@ -95,7 +96,6 @@ def maximal_quadrilateral(hull: list) -> Tuple[float, list]:
                 best_area = triangle1[0] + triangle2[0]
                 best_hull = [hull[i], triangle1[1], hull[j], triangle2[1]]
 
-            # ternary search between j and "i + n" for best triangle
 
     return best_area, best_hull
 
