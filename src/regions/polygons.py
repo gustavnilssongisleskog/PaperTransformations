@@ -45,7 +45,59 @@ def shoelace(hull: list) -> float:
     return abs(area)
 
 def maximal_quadrilateral(hull: list) -> Tuple[float, list]:
-    return 0, []
+    # https://open.kattis.com/problems/citadelconstruction !!!
+    # seems to be very difficult to get within the time limit with python though :(
+    n = len(hull)
+
+    best_area = 0
+    best_hull = []
+
+    for i in range(n):
+        for j in range(i + 2, n):
+            # ternary search between i and j for best triangle
+
+            lo = i
+            hi = j
+            triangle1 = (0, (0, 0))
+            while hi - lo > 5:
+
+                mid1 = lo + (hi - lo) // 3
+                area1 = shoelace([hull[i], hull[mid1], hull[j]])
+                mid2 = hi - (hi - lo) // 3
+                area2 = shoelace([hull[i], hull[mid2], hull[j]])
+
+                if area1 > area2:
+                    hi = mid2
+                else:
+                    lo = mid1
+            for k in range(lo, hi + 1):
+                triangle1 = max(triangle1, (shoelace([hull[i], hull[k], hull[j]]), hull[k]))
+
+            lo = j
+            hi = i + n
+            triangle2 = (0, (0, 0))
+            while hi - lo > 5:
+
+                mid1 = lo + (hi - lo) // 3
+                area1 = shoelace([hull[i], hull[mid1 % n], hull[j]])
+                mid2 = hi - (hi - lo) // 3
+                area2 = shoelace([hull[i], hull[mid2 % n], hull[j]])
+
+                if area1 > area2:
+                    hi = mid2
+                else:
+                    lo = mid1
+            
+            for k in range(lo, hi + 1):
+                triangle2 = max(triangle2, (shoelace([hull[i], hull[k % n], hull[j]]), hull[k % n]))
+
+            if triangle1[0] + triangle2[0] > best_area:
+                best_area = triangle1[0] + triangle2[0]
+                best_hull = [hull[i], triangle1[1], hull[j], triangle2[1]]
+
+            # ternary search between j and "i + n" for best triangle
+
+    return best_area, best_hull
 
 def approximates_quadrilateral(points: list, tolerance: float) -> Tuple[bool, list]:
     hull = convex_hull(points)
