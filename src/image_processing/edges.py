@@ -2,6 +2,8 @@ import numpy as np
 import cv2 as cv
 from numpy import ndarray
 
+from src.image_processing.binarization import otsu_gauss, grayscale
+
 
 def highpass(img: ndarray, n: int) -> ndarray:
     assert len(img.shape) == 2
@@ -34,6 +36,19 @@ def remove_paper_edge(img: ndarray, n: int, erosion_size: int=1, dilate_size: in
 
     return np.minimum(img, 255 - edges)
 
+def paper_edges(img: ndarray, n: int, highpass_edge_thresh: float=-3, erosion_size: int=4, dilate_size: int=4):
+    gray = grayscale(img)
+    edge = highpass(gray, n)
+    outside_edge = np.array(edge < highpass_edge_thresh, dtype=np.uint8) * 255
+
+    closed = dilate(outside_edge, dilate_size)
+    closed = erode(closed, erosion_size)
+    
+    strong_inside_edges = 255 - closed
+    bright_edges = np.minimum(gray, strong_inside_edges)
+    thresh = otsu_gauss(bright_edges)
+    
+    return thresh
 
 
 def main():
