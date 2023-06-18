@@ -14,8 +14,7 @@ paper_corners_3d = np.array([
     [0, paper_height, 0]
 ], dtype=np.float32)
 
-def paper_3d_and_color(img: ndarray, paper_corners_2d: ndarray, paper_img_width: int) -> tuple:
-    rmse, cam_mtx, dist, rvec, tvec = calibrate(paper_corners_3d, paper_corners_2d)
+def paper_3d_and_color(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist: ndarray, rvec: ndarray, tvec: ndarray) -> tuple:
 
     paper_img_height = int(paper_img_width * paper_height / paper_width)
     paper_points_3d = np.array([[[x, y, 0] for x in np.linspace(0, paper_width, paper_img_width)] for y in np.linspace(0, paper_height, paper_img_height)])
@@ -29,15 +28,15 @@ def paper_3d_and_color(img: ndarray, paper_corners_2d: ndarray, paper_img_width:
 
     return paper_points_3d, colors
 
-def paper_straight_on(img: ndarray, paper_corners_2d: ndarray, paper_img_width: int) -> ndarray:
-    _, colors = paper_3d_and_color(img, paper_corners_2d, paper_img_width)
+def paper_straight_on(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist: ndarray, rvec: ndarray, tvec: ndarray) -> ndarray:
+    _, colors = paper_3d_and_color(img, paper_img_width, cam_mtx, dist, rvec, tvec)
 
     paper_img_height = int(paper_img_width * paper_height / paper_width)
     colors = colors.reshape((paper_img_height, paper_img_width, 3))
     return colors
 
-def paper_pointcloud(img: ndarray, paper_corners_2d: ndarray, paper_img_width: int):
-    paper_points_3d, colors = paper_3d_and_color(img, paper_corners_2d, paper_img_width)
+def paper_pointcloud(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist: ndarray, rvec: ndarray, tvec: ndarray):
+    paper_points_3d, colors = paper_3d_and_color(img, paper_img_width, cam_mtx, dist, rvec, tvec)
 
     pointcloud = open3d.geometry.PointCloud()
     pointcloud.points = open3d.utility.Vector3dVector(paper_points_3d)
