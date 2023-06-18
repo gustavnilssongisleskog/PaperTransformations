@@ -8,7 +8,7 @@ def highpass(img: ndarray, n: int) -> ndarray:
     assert n % 2 == 1 and n > 1
 
     kernel = np.ones((n, n), dtype=np.float32) / n ** 2
-    gauss = cv.filter2D(img,-1,kernel)
+    gauss = cv.filter2D(np.array(img, dtype=np.float32),-1,kernel)
     sharp = img - gauss
 
     return sharp
@@ -39,7 +39,7 @@ def remove_paper_edge(img: ndarray, n: int, erosion_size: int=1, dilate_size: in
 def main():
     from src.image_processing.binarization import otsu_gauss, grayscale
     from matplotlib import pyplot as plt
-    for i in range(5,8):
+    for i in range(8,10):
         
         img = cv.imread(f"C:/Users/ggisl/Desktop/PaperTransformations/images/IMG_0{i}.jpg")[:,:,::-1]
         width = int(img.shape[1])# / 4)
@@ -50,7 +50,7 @@ def main():
 
         gray = grayscale(small)
         plt.subplot(1,4,1)
-        plt.imshow(img)
+        plt.imshow(small)
 
         n = 45
         erode_size = 1
@@ -62,6 +62,7 @@ def main():
 
         plt.subplot(1,4,2)
         plt.imshow(edge)
+        edge = np.array(edge < -3, dtype=np.uint8) * 255
 
         closed = dilate(edge, 4)
         closed = erode(closed, 4)
@@ -70,16 +71,18 @@ def main():
         #removed_edges = np.array(remove_paper_edge(gray, n, erode_size, dilate_size), dtype=np.uint8)
         
 
-        plt.subplot(1,4,3)
-        plt.imshow(closed)
-
         strong_edges = 255 - closed
+        plt.subplot(1,4,3)
+        plt.imshow(strong_edges)
+
         zero_on_non_edges = np.minimum(gray, strong_edges)
         thresh = otsu_gauss(zero_on_non_edges)
-        #thresh = otsu_gauss(removed_edges)
+        # thresh = otsu_gauss(removed_edges)
 
         plt.subplot(1,4,4)
         plt.imshow(zero_on_non_edges)
+
+        print((thresh == strong_edges).all())
 
         plt.show()
 
