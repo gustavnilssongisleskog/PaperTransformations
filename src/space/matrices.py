@@ -15,7 +15,7 @@ intrinsic_guess = np.array([
 ])
 
 def calibrate(points_3d: ndarray, points_img: ndarray) -> tuple:
-    rmse, cam_mtx, dist, rvecs, tvecs = cv.calibrateCamera([points_3d], [points_img], (img_width, img_height), intrinsic_guess, np.zeros(5))
+    rmse, cam_mtx, dist, rvecs, tvecs = cv.calibrateCamera([np.array(points_3d, dtype=np.float32)], [np.array(points_img, dtype=np.float32)], (img_width, img_height), intrinsic_guess, np.zeros(5))
 
     rvec = rvecs[0]
     tvec = tvecs[0]
