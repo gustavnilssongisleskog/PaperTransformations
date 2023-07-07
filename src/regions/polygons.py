@@ -31,7 +31,7 @@ def convex_hull(points: list) -> list:
     top.pop()
     bot.pop()
 
-    return top + bot
+    return list(reversed(top + bot))
 
 def shoelace(hull: list) -> float:
     area = 0
