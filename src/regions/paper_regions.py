@@ -36,7 +36,8 @@ def all_regions(img: ndarray) -> list:
             regions.append(new_reg)
             for p in new_reg:
                 vis.add(p)
-
+                
+    regions = [set((x, y) for (y, x) in reg) for reg in regions]
     return regions
 
 def quadrilateral_regions(img: ndarray, tolerance: float=0.1) -> list:
@@ -100,9 +101,10 @@ def main():
     plt.subplot(1,2,2)
     plt.imshow(grayscale(img))
 
+    print(quads)
     for hull in quads:
         for x, y in hull:
-            plt.plot(y, x, "og", markersize=10)
+            plt.plot(x, y, "og", markersize=10)
 
     plt.show()
 
