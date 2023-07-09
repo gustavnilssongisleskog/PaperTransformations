@@ -45,7 +45,7 @@ def paper_edges(img: ndarray, n: int, highpass_edge_thresh: float=-3, erosion_si
     closed = erode(closed, erosion_size)
     
     strong_inside_edges = 255 - closed
-    bright_edges = np.minimum(gray, strong_inside_edges)
+    bright_edges = np.minimum(otsu_gauss(gray), strong_inside_edges)
     thresh = otsu_gauss(bright_edges)
     
     return thresh
@@ -54,11 +54,11 @@ def paper_edges(img: ndarray, n: int, highpass_edge_thresh: float=-3, erosion_si
 def main():
     from src.image_processing.binarization import otsu_gauss, grayscale
     from matplotlib import pyplot as plt
-    for i in range(8,10):
-        
+    for i in range(10):
+        scale = 4
         img = cv.imread(f"C:/Users/ggisl/Desktop/PaperTransformations/images/IMG_0{i}.jpg")[:,:,::-1]
-        width = int(img.shape[1])# / 4)
-        height = int(img.shape[0])# / 4)
+        width = img.shape[1] // scale
+        height = img.shape[0] // scale
         dim = (width, height)
 
         small = cv.resize(img, dim, interpolation=cv.INTER_AREA)
@@ -67,9 +67,9 @@ def main():
         plt.subplot(1,4,1)
         plt.imshow(small)
 
-        n = 45
+        n = 45 // scale
         erode_size = 1
-        dilate_size = 2
+        dilate_size = 1
 
         edge = highpass(gray, n)
         #edge = erode(edge, erode_size)
@@ -79,8 +79,8 @@ def main():
         plt.imshow(edge)
         edge = np.array(edge < -3, dtype=np.uint8) * 255
 
-        closed = dilate(edge, 4)
-        closed = erode(closed, 4)
+        closed = dilate(edge, dilate_size)
+        closed = erode(closed, erode_size)
 
 
         #removed_edges = np.array(remove_paper_edge(gray, n, erode_size, dilate_size), dtype=np.uint8)
@@ -95,7 +95,7 @@ def main():
         # thresh = otsu_gauss(removed_edges)
 
         plt.subplot(1,4,4)
-        plt.imshow(zero_on_non_edges)
+        plt.imshow(thresh)
 
         print((thresh == strong_edges).all())
 
