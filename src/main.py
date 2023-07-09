@@ -7,7 +7,13 @@ from src.space.paper_orientation import best_orientation
 from src.space.straight_paper import paper_straight_on
 
 def main():
-    img = cv.imread(input("Enter path to image file:"))[:,:,::-1]
+    path = input("Enter path to image file:")
+    img = cv.imread(path)
+    if img is None:
+        print("The path you entered does not lead to an image file")
+        exit()
+    
+    img = img[:,:,::-1]
     
     n = 45
     erosion_size = 4
