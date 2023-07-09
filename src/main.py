@@ -39,8 +39,6 @@ def main():
     
     
     cam_mtx, dist, rvec, tvec, _ = best_orientation(np.array(corners))
-    
-    print(cam_mtx)
 
     print("Simulating paper...")
     straight = paper_straight_on(img, 2000, cam_mtx, dist, rvec, tvec)
