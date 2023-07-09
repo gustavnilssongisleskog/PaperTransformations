@@ -1,9 +1,6 @@
 import numpy as np
 import cv2 as cv
 from numpy import ndarray
-import open3d
-
-from src.space.matrices import calibrate
 
 paper_width = 21
 paper_height = 29.7
@@ -34,12 +31,3 @@ def paper_straight_on(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist
     paper_img_height = int(paper_img_width * paper_height / paper_width)
     colors = colors.reshape((paper_img_height, paper_img_width, 3))
     return colors
-
-def paper_pointcloud(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist: ndarray, rvec: ndarray, tvec: ndarray):
-    paper_points_3d, colors = paper_3d_and_color(img, paper_img_width, cam_mtx, dist, rvec, tvec)
-
-    pointcloud = open3d.geometry.PointCloud()
-    pointcloud.points = open3d.utility.Vector3dVector(paper_points_3d)
-    pointcloud.colors = open3d.utility.Vector3dVector(colors / 255)
-    open3d.visualization.draw_geometries([pointcloud])
-
