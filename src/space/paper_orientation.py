@@ -1,7 +1,6 @@
 import numpy as np
 import cv2 as cv
-from src.space.matrices import calibrate
-from src.space.straight_paper import paper_corners_3d
+from src.space.matrices import calibrate_corners
 """
 def line(a, b) -> tuple:
     return (b[1] - a[1]), (a[0] - b[0]), (a[1] * b[0] - a[0] * b[1])
@@ -54,7 +53,7 @@ def best_orientation(corners: np.ndarray) -> tuple:
     oriented_corners[:4 - top_left] = corners[top_left:]
     oriented_corners[4 - top_left:] = corners[:top_left]
     
-    _, cam_mtx, dist, rvec, tvec = calibrate(paper_corners_3d, oriented_corners)
+    _, cam_mtx, dist, rvec, tvec = calibrate_corners(oriented_corners)
     
     return cam_mtx, dist, rvec, tvec, oriented_corners
     

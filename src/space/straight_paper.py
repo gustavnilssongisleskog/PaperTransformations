@@ -1,15 +1,7 @@
 import numpy as np
 import cv2 as cv
 from numpy import ndarray
-
-paper_width = 21
-paper_height = 29.7
-paper_corners_3d = np.array([
-    [0, 0, 0],
-    [paper_width, 0, 0],
-    [paper_width, paper_height, 0],
-    [0, paper_height, 0]
-], dtype=np.float32)
+from src.space.matrices import paper_height, paper_width
 
 def paper_3d_and_color(img: ndarray, paper_img_width: int, cam_mtx: ndarray, dist: ndarray, rvec: ndarray, tvec: ndarray) -> tuple:
 
