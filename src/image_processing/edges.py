@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from numpy import ndarray
 
-from src.image_processing.binarization import otsu_gauss, grayscale
+from src.image_processing.binarization import otsu_gauss, grayscale, binarize_all_colors
 
 
 def highpass(img: ndarray, n: int) -> ndarray:
@@ -45,7 +45,7 @@ def paper_edges(img: ndarray, n: int, highpass_edge_thresh: float=-3, erosion_si
     closed = erode(closed, erosion_size)
     
     strong_inside_edges = 255 - closed
-    bright_edges = np.minimum(otsu_gauss(gray), strong_inside_edges)
+    bright_edges = np.minimum(binarize_all_colors(img), strong_inside_edges)
     thresh = otsu_gauss(bright_edges)
     
     return thresh
