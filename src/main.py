@@ -1,6 +1,7 @@
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
+from space.matrices import calibrate_corners
 from src.image_processing.edges import paper_edges
 from src.regions.paper_regions import quadrilateral_regions
 from src.regions.polygons import shoelace
@@ -38,7 +39,8 @@ def main():
         plt.plot(x, y, "og", markersize=5)
     
     
-    cam_mtx, dist, rvec, tvec, _ = best_orientation(np.array(corners))
+    corners = best_orientation(np.array(corners))
+    _, cam_mtx, dist, rvec, tvec = calibrate_corners(corners)
 
     print("Simulating paper...")
     straight = paper_straight_on(img, 2000, cam_mtx, dist, rvec, tvec)

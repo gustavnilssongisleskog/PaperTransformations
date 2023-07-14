@@ -53,7 +53,5 @@ def best_orientation(corners: np.ndarray) -> tuple:
     oriented_corners[:4 - top_left] = corners[top_left:]
     oriented_corners[4 - top_left:] = corners[:top_left]
     
-    _, cam_mtx, dist, rvec, tvec = calibrate_corners(oriented_corners)
-    
-    return cam_mtx, dist, rvec, tvec, oriented_corners
+    return oriented_corners
     
