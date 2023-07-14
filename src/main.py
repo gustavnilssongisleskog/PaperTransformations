@@ -7,6 +7,7 @@ from src.regions.paper_regions import quadrilateral_regions
 from src.regions.polygons import shoelace
 from src.space.paper_orientation import best_orientation
 from src.space.straight_paper import paper_straight_on
+from src.space.intersections import intersection_coloring
 
 def main():
     path = input("Enter path to image file:")
@@ -40,10 +41,11 @@ def main():
     
     
     corners = best_orientation(np.array(corners))
-    _, cam_mtx, dist, rvec, tvec = calibrate_corners(corners)
+    # _, cam_mtx, dist, rvec, tvec = calibrate_corners(corners)
 
     print("Simulating paper...")
-    straight = paper_straight_on(img, 2000, cam_mtx, dist, rvec, tvec)
+    # straight = paper_straight_on(img, 2000, cam_mtx, dist, rvec, tvec)
+    straight = intersection_coloring(img, corners, 500)
     plt.subplot(1,2,2)
     plt.imshow(straight)
     
