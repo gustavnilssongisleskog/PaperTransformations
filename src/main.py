@@ -18,12 +18,21 @@ def main():
     
     img = img[:,:,::-1]
     
-    n = 45
-    erosion_size = 4
-    dilate_size = 4
+    width = img.shape[1]
+    height = img.shape[0]
+    
+    area = width * height
+    
+    scale = 1 if area < 1e6 else np.sqrt(area / 1e6)
+
+    scaled = cv.resize(img, (int(width / scale), int(height / scale)), interpolation=cv.INTER_AREA)
+    
+    n = 11
+    erosion_size = 1
+    dilate_size = 1
     
     print("\nFinding edges in image...")
-    edges = paper_edges(img, n=n, erosion_size=erosion_size, dilate_size=dilate_size)
+    edges = paper_edges(scaled, n=n, erosion_size=erosion_size, dilate_size=dilate_size)
     
     print("Partitioning image regions...")
     quad_regions = quadrilateral_regions(edges)
@@ -32,15 +41,18 @@ def main():
         print("Could not find a paper in the image")
         exit()
         
+    
+    corners = max(quad_regions, key=shoelace)
+    corners = best_orientation(np.array(corners))
+    corners *= scale
+    
     plt.subplot(1,2,1)
     plt.imshow(img)
     
-    corners = max(quad_regions, key=shoelace)
     for x, y in corners:
         plt.plot(x, y, "og", markersize=5)
     
     
-    corners = best_orientation(np.array(corners))
     # _, cam_mtx, dist, rvec, tvec = calibrate_corners(corners)
 
     print("Simulating paper...")
