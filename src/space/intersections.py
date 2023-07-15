@@ -15,8 +15,7 @@ def line(a, b) -> tuple:
 
 
 def intersection_lines(l1, l2) -> np.ndarray:
-    # return np.array([l1[1] * l2[2] - l2[1] * l1[2], l1[2] * l2[0] - l2[2] * l1[0]]) / (l1[0] * l2[1] - l2[0] * l1[1])
-    return -1 / (l1[0] * l2[1] - l2[0] * l1[1]) * np.array([[l2[1], -l1[1]], [-l2[0], l1[0]]]) @ np.array([l1[2], l2[2]])
+    return np.array([l1[1] * l2[2] - l2[1] * l1[2], l1[2] * l2[0] - l2[2] * l1[0]]) / (l1[0] * l2[1] - l2[0] * l1[1])
 
     
 def intersection_coloring(img: np.ndarray, paper_corners_2d: np.ndarray, img_width: int) -> np.ndarray:
